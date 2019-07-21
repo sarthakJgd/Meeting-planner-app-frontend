@@ -1,0 +1,99 @@
+<!-- <Header class="header">Welcome: {{ userName | titlecase }}!
+  <button (click)="logout()" style="background-color: #FF7643;margin: 5px;" class="btn btn-info">
+      Logout
+    </button>
+</Header> -->
+<nav class="navbar navbar-expand-lg navbar-dark nav-css"
+  style="margin-bottom:2%; background-color: #FF7643;position:sticky">
+  <mat-icon style="color:white">calendar_today</mat-icon>
+  <a class="navbar-brand" href="#">Meet-App</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+    aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <form class="form-inline my-4 my-lg-0 mr-auto">
+    </form>
+
+
+    <ul class="navbar-nav" style="border-right:1px dotted gray">
+      <li class="nav-item name-container">
+        <mat-icon style="display: inline-block; margin-bottom: 4px; vertical-align: middle; color: white">
+          account_circle</mat-icon>
+        <a class="nav-link" style="display:inline-block; color: white">{{userName}}</a>
+      </li>
+      <li class="nav-item" style="margin:0 2px">
+        <a class="nav-link active" (click)="goToAbout();">About</a>
+      </li>
+    </ul>
+    <mat-icon class="" style="margin:0 15px" (click)="logout()">power_settings_new</mat-icon>
+  </div>
+</nav>
+
+
+<div class="container">
+  <ng-container *ngIf="options">
+    <ng-fullcalendar #fullcalendar (dateClick)="dateClick($event)" [eventsModel]="eventsModel" [options]="options"
+      (eventClick)="eventClick($event)"></ng-fullcalendar>
+  </ng-container>
+</div>
+
+<p-dialog id="dateDialog" [(visible)]="displayDate">
+  <p-header>
+    {{ startDate }}
+  </p-header>
+  <div>You don't have access to create new meetings. Click on an existing meeting to view details or ask your admin to
+    create a new meeting for you.</div>
+  <p-footer>
+  </p-footer>
+</p-dialog>
+
+<p-dialog id="dateDialog" [(visible)]="displayEvent">
+  <p-header>
+    Your Meeting
+  </p-header>
+  <div>
+    <b>Agenda:</b>
+    <input type="text" class="form-control" [value]="eventTitle" disabled="true" />
+    <br>
+    <b>Starts:</b>
+    <input type="text" class="form-control" [value]="startDate" disabled="true" />
+    <b>at:</b>
+    <input type="text" class="form-control" [value]="startTime" disabled="true" />
+    <br />
+    <b>Ends:</b>
+    <input type="text" class="form-control" [value]="endDate" disabled="true" />
+    <b>at:</b>
+    <input type="text" class="form-control" [value]="endTime" disabled="true" />
+    <br />
+    <b>Location:</b>
+    <input type="text" class="form-control" [value]="location" disabled="true" />
+    <br />
+    <b>CreatedBy:</b>
+    <input type="text" class="form-control" [value]="createdBy" disabled="true" />
+    <br />
+  </div>
+  <p-footer>
+
+    <button style="background-color: #FF7643;margin: 5px;" class="btn btn-info" (click)="displayEvent = false">
+      Close
+    </button>
+  </p-footer>
+</p-dialog>
+
+
+<p-dialog id="dateDialog" [(visible)]="displayRemainder">
+  <p-header>
+    You Have A Meeting within title {{eventTitle}} in 1 Minute
+  </p-header>
+  <p-footer>
+    <button type=" button" class="btn btn-outline-danger" (click)="stopDisplayRemainder()">
+      Dismiss
+    </button>
+    <button type=" button" class="btn btn-outline-danger" (click)="displayRemainder = false">
+      Snooze
+    </button>
+  </p-footer>
+</p-dialog>

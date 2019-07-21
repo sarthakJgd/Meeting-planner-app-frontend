@@ -1,0 +1,121 @@
+<div>
+  <nav class="navbar navbar-expand-lg navbar-dark nav-css"
+    style="margin-bottom:2%; background-color: #FF7643;position:sticky">
+
+    <mat-icon style="color:white" (click)="visibleSidebar1 = true">menu</mat-icon>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <form class="form-inline my-4 my-lg-0 mr-auto">
+      </form>
+
+      <ul class="navbar-nav" style="border-right:1px dotted gray">
+        <!-- <li class="nav-item name-container">
+        </li> -->
+        <li class="nav-item name-container">
+          <mat-icon style="display: inline-block; margin-bottom: 4px; vertical-align: middle; color: white">
+            account_circle</mat-icon>
+          <a class="nav-link" style="display:inline-block; color: white">{{userName}} (Admin)</a>
+        </li>
+        <li class="nav-item active" style="margin:0 2px">
+          <a class="nav-link" (click)="goToAbout();" style="display:inline-block; color: white">About</a>
+        </li>
+
+      </ul>
+
+      <mat-icon class="" style="margin:0 15px" (click)="logout()">power_settings_new</mat-icon>
+    </div>
+
+  </nav>
+
+  <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="10000" position="top"> 
+    <div class="container-fluid">
+        <h5>Please select user from list to add meeting for:</h5>
+        <div class="row">
+            <ul class="" style="color: black">
+                <li class="" *ngFor="let user of allUserDetail" style="display:inline" (click)="userSelectedToAddMeeting(user)">
+                  <button type="button" class="btn btn-light" style="background-color:#FF7643;color:white"
+                  >{{user.firstName | titlecase}} {{user.lastName | titlecase}}</button>
+                </li>
+              </ul>
+        </div>
+    </div>  
+  </p-sidebar>
+
+
+  <div class="container">
+    <ng-container *ngIf="options">
+      <h4 style="text-align: center">{{selectedFirstName|titlecase}}
+          {{selectedLastName|titlecase}}
+      </h4>
+
+      <ng-fullcalendar #fullcalendar (select)="dateSelect($event)" [eventsModel]="eventsModel" [options]="options"
+        (eventClick)="eventClick($event)">
+      </ng-fullcalendar>
+    </ng-container>
+  </div>
+</div>
+
+<p-dialog id="dateDialog" [(visible)]="displayDate" styleClass="myStyle">
+  <p-header>
+    Your Meeting
+  </p-header>
+  <div>
+    <b>Agenda:</b> <input type="text" class="form-control" [(ngModel)]="eventTitle" name="eventTitle"
+      placeholder="Event Title">
+    <b>Starts Date:(YYYY-MM-DD)</b> <input type="text" class="form-control" [(ngModel)]="startDate" name="startDate"
+      [value]="startDate">
+    <br>
+    <b>Starts Time:(HH:MM:SS)</b> <input type="text" class="form-control" [(ngModel)]="startTime" name="startTime"
+      [value]="startTime">
+    <br>
+    <b>Ends Date:(YYYY-MM-DD)</b> <input type="text" class="form-control" [(ngModel)]="endDate" name="endDate"
+      [value]="endDate">
+    <br>
+    <b>Ends Time:(HH:MM:SS)</b> <input type="text" class="form-control" [(ngModel)]="endTime" name="endTime"
+      [value]="endTime">
+    <br>
+    <b>Location :</b> <input type="text" class="form-control" [(ngModel)]="location" name="location" [value]="location">
+    <br>
+
+  </div>
+  <p-footer>
+    <button type=" button" class="btn btn-lg btn-block" style="background-color: #FF7643;color:white"
+      (click)="displayDate=false" (click)="createEvent()">Create Event</button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog id="dateDialog" [(visible)]="displayEvent">
+  <p-header>
+    Your Meeting
+  </p-header>
+  <div>
+    <b>Agenda:</b> <input type="text" class="form-control" [(ngModel)]="eventTitle" name="eventTitle"
+      placeholder="Event Title">
+    <b>Starts Date:(YYYY-MM-DD)</b> <input type="text" class="form-control" [(ngModel)]="startDate" name="startDate"
+      [value]="startDate">
+    <br>
+    <b>Starts Time:(HH:MM:SS)</b> <input type="text" class="form-control" [(ngModel)]="startTime" name="startTime"
+      [value]="startTime">
+    <br>
+    <b>Ends Date:(YYYY-MM-DD)</b> <input type="text" class="form-control" [(ngModel)]="endDate" name="endDate"
+      [value]="endDate">
+    <br>
+    <b>Ends Time:(HH:MM:SS)</b> <input type="text" class="form-control" [(ngModel)]="endTime" name="endTime"
+      [value]="endTime">
+    <br>
+    <b>Location :</b> <input type="text" class="form-control" [(ngModel)]="location" name="location" [value]="location">
+    <br>
+
+  </div>
+  <p-footer>
+    <button type=" button" class="btn btn-link" (click)="displayEvent=false" (click)="deleteEvent()">Delete</button>
+    <button type=" button" style="background-color: #FF7643;color:white" class="btn btn-lg btn-block"
+      (click)="displayEvent=false" (click)="updateEvent()">Update
+      Event</button>
+  </p-footer>
+</p-dialog>

@@ -1,0 +1,20 @@
+p {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.container-fluid {
+  background-color: white;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+
+
+.list {
+  color: white;
+}
+
+.userList {
+  height: 30px;
+  width: 200px;
+}
