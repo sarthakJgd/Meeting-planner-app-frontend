@@ -43,7 +43,6 @@ export class AboutComponent implements OnInit {
     this.appService.logout().subscribe(
       apiResponse => {
         if (apiResponse.status === 200) {
-          console.log("logout called");
           this.Cookie.delete("authtoken");
 
           this.Cookie.delete("receiverId");

@@ -89,7 +89,7 @@ export class AdminDashboardComponent implements OnInit {
         this.allUserDetail = response;
       },
       error => {
-        console.log(error);
+        console.error('Request failed');
       }
     );
     this.options = {
@@ -130,7 +130,6 @@ export class AdminDashboardComponent implements OnInit {
     this.selectedEventId = model.event.id;
     this.eventsModel.forEach(event => {
       if (event.id === model.event.id) {
-        console.log(event);
         this.location = event.location;
         this.createdBy = event.creatorName;
         this.startTime = event.start.substring(event.start.indexOf("T") + 1);
@@ -154,7 +153,6 @@ export class AdminDashboardComponent implements OnInit {
     this.appService.logout().subscribe(
       apiResponse => {
         if (apiResponse.status === 200) {
-          console.log("logout called");
           this.Cookie.delete("authtoken");
 
           this.Cookie.delete("userId");
@@ -189,7 +187,6 @@ export class AdminDashboardComponent implements OnInit {
       creatorName: this.userName,
       authToken: this.authToken
     };
-    console.log(data);
     this.eventService.createEvents(data).subscribe(
       response => {
         this.toastr.success("event created");
@@ -203,7 +200,6 @@ export class AdminDashboardComponent implements OnInit {
           actionPerformed: "created",
           eventStart: `${this.startDate}T${this.startTime}`
         };
-        console.log("emitting " + this.eventData.createdForId);
         this.socketService.eventOccured(this.eventData);
         this.userSelectedToAddMeeting(this.selectedUserDetails);
       },
@@ -228,10 +224,9 @@ export class AdminDashboardComponent implements OnInit {
     this.eventService.getEvents(data).subscribe(
       response => {
         this.eventsModel = response.data;
-        console.log(this.eventsModel);
       },
       error => {
-        console.log("error", error);
+        console.error('Request failed');
       }
     );
   }
@@ -246,7 +241,6 @@ export class AdminDashboardComponent implements OnInit {
       title: this.eventTitle,
       authToken: this.authToken
     };
-    console.log(data);
     this.eventService.editEvent(data).subscribe(
       response => {
         this.toastr.success("Successfully editted the event");
@@ -260,7 +254,6 @@ export class AdminDashboardComponent implements OnInit {
           actionPerformed: "Updated",
           eventStart: `${this.startDate}T${this.startTime}`
         };
-        console.log("emitting " + this.eventData.createdForId);
         this.socketService.eventOccured(this.eventData);
         this.userSelectedToAddMeeting(this.selectedUserDetails);
       },
@@ -286,7 +279,6 @@ export class AdminDashboardComponent implements OnInit {
             actionPerformed: "deleted",
             eventStart: null
           };
-          console.log("emitting " + this.eventData.createdForId);
           this.socketService.eventOccured(this.eventData);
           this.toastr.success("Successfully deleted the event");
           this.userSelectedToAddMeeting(this.selectedUserDetails);

@@ -59,11 +59,9 @@ export class UserDashboardComponent implements OnInit {
       userId: this.userId,
       authToken: this.authToken
     };
-    console.log(data);
     this.eventService.getEvents(data).subscribe(
       response => {
         this.eventsModel = response.data;
-        console.log(response);
         this.options = {
           editable: false,
           eventLimit: 2,
@@ -78,7 +76,7 @@ export class UserDashboardComponent implements OnInit {
         };
       },
       error => {
-        console.log("error", error);
+        console.error('Request failed');
       }
     );
     this.showAlertForEvent();
@@ -91,14 +89,12 @@ export class UserDashboardComponent implements OnInit {
 
   eventClick(model) {
     this.allDay = false;
-    console.log(model);
     this.startDate = model.event.start.toString().substring(0, 15);
     this.endDate = model.event.end.toString().substring(0, 15);
     this.eventTitle = model.event.title;
     this.displayEvent = true;
     this.eventsModel.forEach(event => {
       if (event.id === model.event.id) {
-        console.log(event);
         this.location = event.location;
         this.createdBy = event.creatorName;
         this.startTime = event.start.substring(event.start.indexOf("T") + 1);
@@ -109,7 +105,6 @@ export class UserDashboardComponent implements OnInit {
 
   dateClick(model) {
     this.allDay = true;
-    console.log(model);
     this.startDate = model.date.toString().substring(0, 15);
     this.displayDate = true;
   }
@@ -125,12 +120,10 @@ export class UserDashboardComponent implements OnInit {
         window.location.reload();
       }, 4000);
 
-      console.log("an event was " + data.actionPerformed);
     });
   };
 
   public notifyUserAboutMeeting: any = data => {
-    console.log("calling notifyUserAboutMeeting()");
     this.socketService.alertUserForUpcommingMeeting().subscribe(
       data => {
         this.eventTitle = data.eventTitle;
@@ -139,7 +132,7 @@ export class UserDashboardComponent implements OnInit {
         }, 1000000);
       },
       err => {
-        console.log(err);
+        console.error('Request failed');
       }
     );
   };
@@ -152,7 +145,6 @@ export class UserDashboardComponent implements OnInit {
     this.appService.logout().subscribe(
       apiResponse => {
         if (apiResponse.status === 200) {
-          console.log("logout called");
           this.Cookie.delete("authtoken");
 
           this.Cookie.delete("receiverId");

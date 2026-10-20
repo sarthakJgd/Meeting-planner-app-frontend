@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { environment } from "../environments/environment";
 import * as io from "socket.io-client";
 import { Observable, observable } from "rxjs";
 
@@ -11,11 +12,14 @@ import { CookieService } from "ngx-cookie-service";
   providedIn: "root"
 })
 export class SocketService {
-  private baseUrl = "http://meetingplannerbackend-env.vxiuy6pa6v.us-east-2.elasticbeanstalk.com";
-  //private baseUrl = "http://localhost:8081"; 
+  private baseUrl = environment.apiBaseUrl;
   private socket;
   constructor(private http: HttpClient, private Cookie: CookieService) {
     this.socket = io(this.baseUrl);
+    this.socket.on("connect", () => {
+      this.socket.emit("set-user", this.Cookie.get("authtoken"));
+    });
+    this.socket.on("auth-error", () => this.socket.disconnect());
   }
 
   // events to be listened
@@ -23,7 +27,6 @@ export class SocketService {
   public alertUser = userId => {
     return Observable.create(observer => {
       this.socket.on(userId, data => {
-        console.log("alertUser is called");
         observer.next(data);
       }); // end Socket
     }); // end Observable
@@ -32,7 +35,6 @@ export class SocketService {
   public alertUserForUpcommingMeeting = () => {
     return Observable.create(observer => {
       this.socket.on("alert-user-for-upcomming-meeting", data => {
-        console.log("alertUser is called");
         observer.next(data);
       }); // end Socket
     }); // end Observable
@@ -40,7 +42,6 @@ export class SocketService {
 
   public eventOccured = data => {
     this.socket.emit("event-occured", data);
-    console.log("in event occured " + data.actionPerformed);
   }; //end of eventCreated
 
   public disconnectedSocket = () => {

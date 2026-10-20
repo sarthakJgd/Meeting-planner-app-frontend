@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@angular/core";
+import { environment } from "../environments/environment";
 import { Observable, of } from "rxjs";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 
 @Injectable()
 export class EventService {
-  private baseURL = `http://meetingplannerbackend-env.vxiuy6pa6v.us-east-2.elasticbeanstalk.com/api/v1/meeting`;
-  //private baseURL = `http://localhost:8081/api/v1/meeting`; 
+  private baseURL = `${environment.apiBaseUrl}/api/v1/meeting`;
   constructor(private http: HttpClient) {}
 
   //get events passing userId as param
@@ -13,8 +13,9 @@ export class EventService {
     const params = new HttpParams().set("userId", data.userId);
 
     return this.http.post(
-      `${this.baseURL}/getEvent?authToken=${data.authToken}`,
-      params
+      `${this.baseURL}/getEvent`,
+      params,
+      this.authOptions(data.authToken)
     );
   }
 
@@ -29,13 +30,14 @@ export class EventService {
       .set("creatorName", data.creatorName);
 
     return this.http.post(
-      `${this.baseURL}/createEvent?authToken=${data.authToken}`,
-      params
+      `${this.baseURL}/createEvent`,
+      params,
+      this.authOptions(data.authToken)
     );
   }
 
   getAllUserDetails(authToken) {
-    return this.http.get(`${this.baseURL}/allUsers?authToken=${authToken}`);
+    return this.http.get(`${this.baseURL}/allUsers`, this.authOptions(authToken));
   }
 
   editEvent(data) {
@@ -45,16 +47,21 @@ export class EventService {
       .set("end", data.end)
       .set("location", data.location);
 
-    console.log(params);
     return this.http.post(
-      `${this.baseURL}/${data.id}/editEvent?authToken=${data.authToken}`,
-      params
+      `${this.baseURL}/${data.id}/editEvent`,
+      params,
+      this.authOptions(data.authToken)
     );
   }
 
   deleteEvent(eventId, authToken) {
     return this.http.get(
-      `${this.baseURL}/${eventId}/deleteEvent?authToken=${authToken}`
+      `${this.baseURL}/${eventId}/deleteEvent`,
+      this.authOptions(authToken)
     );
+  }
+
+  private authOptions(authToken) {
+    return { headers: new HttpHeaders().set("Authorization", `Bearer ${authToken}`) };
   }
 }
