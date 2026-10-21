@@ -6,9 +6,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CookieService} from 'ngx-cookie-service'; 
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 
-import {ToastrModule} from 'ngx-toastr';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { UserHeaderComponent } from './user-header/user-header.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
@@ -17,12 +16,12 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 
 @NgModule({
   declarations: [LoginComponent, SignupComponent, ForgotPasswordComponent, UserHeaderComponent, ThankYouComponent, ResetPasswordComponent],
+  exports: [UserHeaderComponent],
   imports: [
     CommonModule,
     FormsModule,
     BrowserAnimationsModule,
     MatIconModule,
-    ToastrModule.forRoot(),
     RouterModule.forChild([
       {path:"sign-up",component:SignupComponent},
       {path:"forgot-password",component:ForgotPasswordComponent},

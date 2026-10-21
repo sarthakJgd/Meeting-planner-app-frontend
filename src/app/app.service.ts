@@ -1,11 +1,6 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../environments/environment";
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpClientModule,
-  HttpParams
-} from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable, observable, ObservableLike } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
 

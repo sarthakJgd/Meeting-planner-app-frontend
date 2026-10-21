@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from 'src/app/event.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AppService } from 'src/app/app.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { NotificationService } from '../../notification.service';
 import { SocketService } from 'src/app/socket.service';
 
 @Component({
-  selector: 'app-about',
-  templateUrl: './about.component.html',
-  styleUrls: ['./about.component.css']
+    selector: 'app-about',
+    templateUrl: './about.component.html',
+    styleUrls: ['./about.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AboutComponent implements OnInit {
   authToken: string;
@@ -22,7 +24,7 @@ export class AboutComponent implements OnInit {
     private Cookie: CookieService,
     private appService: AppService,
     private router: Router,
-    private toastr: ToastrService,
+    private toastr: NotificationService,
     private socketService: SocketService) { }
 
   ngOnInit() {

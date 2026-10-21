@@ -1,33 +1,34 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { OptionsInput, Calendar } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import { CalendarComponent } from "ng-fullcalendar";
-import timeGridPlugin from "@fullcalendar/timegrid";
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { CalendarOptions, FullCalendarComponent } from "@fullcalendar/angular";
+import dayGridPlugin from "@fullcalendar/angular/daygrid";
+import interactionPlugin from "@fullcalendar/angular/interaction";
+import timeGridPlugin from "@fullcalendar/angular/timegrid";
 import { EventService } from "../../event.service";
 import { AppService } from "src/app/app.service";
 import { CookieService } from "ngx-cookie-service";
 import { Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
+import { NotificationService } from "../../notification.service";
 import { SocketService } from "src/app/socket.service";
 
 @Component({
-  selector: "app-user-dashboard",
-  templateUrl: "./user-dashboard.component.html",
-  styleUrls: ["./user-dashboard.component.css"]
+    selector: "app-user-dashboard",
+    templateUrl: "./user-dashboard.component.html",
+    styleUrls: ["./user-dashboard.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class UserDashboardComponent implements OnInit {
-  options: OptionsInput;
+  options: CalendarOptions;
   public allDay: any = false;
-  @ViewChild("fullcalendar") fullcalendar: CalendarComponent;
+  @ViewChild("fullcalendar") fullcalendar?: FullCalendarComponent;
   public authToken: any;
   public userInfo: any;
   public userName: any;
   public userId: any;
-  public displayDate: boolean = false;
+  public displayDate = false;
   public location: string;
   public createdBy: string;
-  public displayEvent: boolean = false;
+  public displayEvent = false;
   public startDate: string;
   public endDate: string;
   public startTime: string;
@@ -35,8 +36,8 @@ export class UserDashboardComponent implements OnInit {
   public eventTitle: string;
   public allUsers: any = [];
   public eventsModel: any;
-  public disconnectedSocket: boolean = false;
-  public displayRemainder: boolean = false;
+  public disconnectedSocket = false;
+  public displayRemainder = false;
   public interval: any;
 
   constructor(
@@ -44,7 +45,7 @@ export class UserDashboardComponent implements OnInit {
     private Cookie: CookieService,
     private appService: AppService,
     private router: Router,
-    private toastr: ToastrService,
+    private toastr: NotificationService,
     private socketService: SocketService
   ) {}
   ngOnInit() {
@@ -64,15 +65,18 @@ export class UserDashboardComponent implements OnInit {
         this.eventsModel = response.data;
         this.options = {
           editable: false,
-          eventLimit: 2,
+          dayMaxEvents: 2,
           fixedWeekCount: false,
           height: 800,
-          header: {
+          headerToolbar: {
             left: "prev,next today myCustomButton",
             center: "title",
             right: "dayGridMonth,timeGridWeek,timeGridDay"
           },
-          plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin]
+          plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+          events: this.eventsModel,
+          dateClick: this.dateClick.bind(this),
+          eventClick: this.eventClick.bind(this)
         };
       },
       error => {

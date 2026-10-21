@@ -1,38 +1,38 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { OptionsInput, Calendar } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import { FullCalendarComponent } from "@fullcalendar/angular";
-import timeGridPlugin from "@fullcalendar/timegrid";
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { CalendarOptions, FullCalendarComponent } from "@fullcalendar/angular";
+import dayGridPlugin from "@fullcalendar/angular/daygrid";
+import interactionPlugin from "@fullcalendar/angular/interaction";
+import timeGridPlugin from "@fullcalendar/angular/timegrid";
 import { EventService } from "../../event.service";
 import { CookieService } from "ngx-cookie-service";
 import { AppService } from "../../app.service";
-import { ToastrService } from "ngx-toastr";
+import { NotificationService } from "../../notification.service";
 import { Router } from "@angular/router";
 import { SocketService } from "src/app/socket.service";
 
 @Component({
-  selector: "app-admin-dashboard",
-  templateUrl: "./admin-dashboard.component.html",
-  styleUrls: ["./admin-dashboard.component.css"]
+    selector: "app-admin-dashboard",
+    templateUrl: "./admin-dashboard.component.html",
+    styleUrls: ["./admin-dashboard.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AdminDashboardComponent implements OnInit {
   //Variable declaration starts here
-  calander: Calendar;
-  options: OptionsInput;
+  options: CalendarOptions;
   eventsModel: any;
-  @ViewChild("fullcalendar") fullcalendar: FullCalendarComponent;
+  @ViewChild("fullcalendar") fullcalendar?: FullCalendarComponent;
 
   public selectedUserDetails: any;
-  public location: String;
+  public location: string;
   public authToken: any;
   public userName: any;
   public userInfo: any;
-  public selectedFirstName: String;
-  public selectedLastName: String;
+  public selectedFirstName: string;
+  public selectedLastName: string;
   public userId: any;
   public createdBy: string;
-  public display: boolean = false;
+  public display = false;
   public allUserDetail: any = [];
   public allDay: boolean;
   public startDate: any;
@@ -42,7 +42,7 @@ export class AdminDashboardComponent implements OnInit {
   public eventTitle: any;
   public displayEvent: boolean;
   public displayDate: boolean;
-  public visibleSidebar1: boolean = false;
+  public visibleSidebar1 = false;
   public createEventTitle: string;
   public selectedUserId: string;
   public event = [];
@@ -65,7 +65,7 @@ export class AdminDashboardComponent implements OnInit {
     private Cookie: CookieService,
     private appService: AppService,
     private router: Router,
-    private toastr: ToastrService,
+    private toastr: NotificationService,
     private socketService: SocketService
   ) {}
   //constructor end
@@ -94,17 +94,20 @@ export class AdminDashboardComponent implements OnInit {
     );
     this.options = {
       editable: false,
-      eventLimit: 2,
+      dayMaxEvents: 2,
       selectable: true,
       fixedWeekCount: false,
       lazyFetching: true,
       height: 800,
-      header: {
+      headerToolbar: {
         left: "prev,next today customButton",
         center: "title",
         right: "dayGridMonth,timeGridWeek,timeGridDay"
       },
-      plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin]
+      plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+      events: this.eventsModel,
+      select: this.dateSelect.bind(this),
+      eventClick: this.eventClick.bind(this)
     };
   }
   //ngOnInit end
@@ -224,6 +227,7 @@ export class AdminDashboardComponent implements OnInit {
     this.eventService.getEvents(data).subscribe(
       response => {
         this.eventsModel = response.data;
+        this.options.events = this.eventsModel;
       },
       error => {
         console.error('Request failed');
