@@ -1,10 +1,6 @@
 import { Injectable } from "@angular/core";
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpClientModule,
-  HttpParams
-} from "@angular/common/http";
+import { environment } from "../environments/environment";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable, observable, ObservableLike } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
 
@@ -12,8 +8,7 @@ import { CookieService } from "ngx-cookie-service";
   providedIn: "root"
 })
 export class AppService {
-  baseURL = "http://meetingplannerbackend-env.vxiuy6pa6v.us-east-2.elasticbeanstalk.com/api/v1";
-   //baseURL = "http://localhost:8081/api/v1"; 
+  baseURL = `${environment.apiBaseUrl}/api/v1`;
   constructor(private http: HttpClient, private Cookie: CookieService) {}
 
   public getUserInfoFromLocalstorage = () => {

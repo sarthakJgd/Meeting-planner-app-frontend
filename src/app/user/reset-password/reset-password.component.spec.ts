@@ -1,4 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppService } from '../../app.service';
+import { NotificationService } from '../../notification.service';
 
 import { ResetPasswordComponent } from './reset-password.component';
 
@@ -6,12 +11,18 @@ describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
   let fixture: ComponentFixture<ResetPasswordComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [FormsModule, RouterTestingModule],
+      providers: [
+        { provide: AppService, useValue: {} },
+        { provide: NotificationService, useValue: {} },
+      ],
       declarations: [ ResetPasswordComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ResetPasswordComponent);
